@@ -1,11 +1,17 @@
 package com.medium.viewpager
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
@@ -18,16 +24,17 @@ fun HorizontalPagerScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(30.dp)
+            .background(Color.LightGray)
     ) {
         val items = createItems()
         val pagerState = rememberPagerState()
         val coroutineScope = rememberCoroutineScope()
 
-        HorizontalTabs(
-            items = items,
-            pagerState = pagerState,
-            scope = coroutineScope
-        )
+        /*   HorizontalTabs(
+               items = items,
+               pagerState = pagerState,
+               scope = coroutineScope
+           )*/
 
         HorizontalPager(
             count = items.size,
@@ -58,7 +65,14 @@ fun HorizontalPagerScreen() {
             pagerState = pagerState,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(16.dp),
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
+            indicatorHeight = 8.dp,
+            activeColor = Color.White,
+            inactiveColor = Color.DarkGray,
+            indicatorWidth = ChangeSizeOfShape(currentPage = pagerState.currentPage),
+            pageCount = 2,
+            indicatorShape = RoundedCornerShape(corner = CornerSize(40.dp))
         )
 
         Button(
@@ -72,6 +86,34 @@ fun HorizontalPagerScreen() {
             Text(text = "Scroll to the third page")
         }
     }
+}
+
+@Composable
+fun CorrectShape(currentPage: Int): Shape {
+    var shapeToReturn: Shape? = null
+    when (currentPage) {
+        0 -> {
+            shapeToReturn = RoundedCornerShape(corner = CornerSize(50.dp))
+        }
+        1 -> {
+            shapeToReturn = RoundedCornerShape(corner = CornerSize(15.dp))
+        }
+    }
+
+    return shapeToReturn!!
+}
+
+@Composable
+fun ChangeSizeOfShape(currentPage: Int): Dp {
+    when (currentPage) {
+        0 -> {
+            return 8.dp
+        }
+        1 -> {
+            return 16.dp
+        }
+    }
+    return 8.dp
 }
 
 @OptIn(ExperimentalPagerApi::class)
